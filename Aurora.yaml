@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create Aurora MySQL 8.0 Cluster and Instance Parameter Group
+
+Parameters:
+  DBClusterFamily:
+    Description: Aurora MySQL DB Cluster Parameter Group Family
+    Type: String
+    Default: aurora-mysql8.0
+
+  DBInstanceFamily:
+    Description: Aurora MySQL DB Instance Parameter Group Family
+    Type: String
+    Default: aurora-mysql8.0
+
+Resources:
+  MyDBClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      Description: Aurora MySQL 8.0 Cluster Parameter Group
+      Family: !Ref DBClusterFamily
+      Parameters:
+        character_set_server: utf8mb4
+        slow_query_log: "1"
+
+  MyDBInstanceParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: Aurora MySQL 8.0 Instance Parameter Group
+      Family: !Ref DBInstanceFamily
+      Parameters:
+        max_connections: "500"
+
+  MyDBOptionGroup:
+    Type: AWS::RDS::OptionGroup
+    Properties:
+      EngineName: aurora-mysql
+      MajorEngineVersion: "8.0"
+      OptionGroupDescription: Aurora MySQL 8.0 Option Group
+      OptionConfigurations: []
+
+Outputs:
+  ClusterParameterGroupName:
+    Description: The name of the created Aurora MySQL Cluster Parameter Group
+    Value: !Ref MyDBClusterParameterGroup
+
+  InstanceParameterGroupName:
+    Description: The name of the created Aurora MySQL Instance Parameter Group
+    Value: !Ref MyDBInstanceParameterGroup
+
+  OptionGroupName:
+    Description: The name of the created Aurora MySQL Option Group
+    Value: !Ref MyDBOptionGroup
