@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create RDS MySQL 8.0 Parameter Group and Option Group
+
+Parameters:
+  DBFamily:
+    Description: MySQL DB Parameter Group Family
+    Type: String
+    Default: mysql8.0
+
+  OptionGroupName:
+    Description: The name of the Option Group
+    Type: String
+    Default: my-mysql-option-group
+
+Resources:
+  MyDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: MySQL 8.0 Parameter Group
+      Family: !Ref DBFamily
+      Parameters:
+        max_connections: "500"
+        innodb_flush_log_at_trx_commit: "2"
+
+  MyDBOptionGroup:
+    Type: AWS::RDS::OptionGroup
+    Properties:
+      EngineName: mysql
+      MajorEngineVersion: "8.0"
+      OptionGroupDescription: MySQL 8.0 Option Group
+      OptionConfigurations:
+        - OptionName: MARIADB_AUDIT_PLUGIN
+
+Outputs:
+  ParameterGroupName:
+    Description: The name of the created MySQL Parameter Group
+    Value: !Ref MyDBParameterGroup
+
+  OptionGroupName:
+    Description: The name of the created MySQL Option Group
+    Value: !Ref MyDBOptionGroup
